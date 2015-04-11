@@ -40,8 +40,7 @@ public class WordCount {
     }
   }
   public static class IntSumReducer
-       extends Reducer<Text,Text,Text,IntWritable> {
-    private IntWritable result = new IntWritable();
+       extends Reducer<Text,Text,Text,NullWritable> {
     public void reduce(Text key, Iterable<Text> values,
                        Context context
                        ) throws IOException, InterruptedException {
@@ -53,8 +52,7 @@ public class WordCount {
         }
         chapterToNum.put(val.toString(), thisSum + 1);
       }
-      context.write(new Text(""), null);
-      context.write(key, null);
+      context.write(key, NullWritable.get());
       List<OutputRecord> records = new ArrayList<OutputRecord>();
       for (String chapter : chapterToNum.keySet()){
         records.add(new OutputRecord(chapterToNum.get(chapter), chapter)); 
@@ -69,9 +67,10 @@ public class WordCount {
         }
       });
       for (OutputRecord record: records){
-        result.set(record.num);
-        context.write(new Text(record.chapter), result);
+        context.write(new Text("<" + record.chapter + ", " + record.num + ">"), NullWritable.get());
+
       }
+    context.write(new Text(""), NullWritable.get());
     }
   }
 
@@ -84,7 +83,8 @@ public class WordCount {
     job.setMapOutputValueClass(Text.class);
     job.setReducerClass(IntSumReducer.class);
     job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(IntWritable.class);
+    job.setOutputValueClass(NullWritable.class);
+    //job.setOutputValueClass(IntWritable.class);
     FileInputFormat.addInputPath(job, new Path(args[0]));
     FileOutputFormat.setOutputPath(job, new Path(args[1]));
     System.exit(job.waitForCompletion(true) ? 0 : 1);
