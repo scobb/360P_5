@@ -1,0 +1,10 @@
+Steve Cobb scc2448
+Nate Zuiker nrz92
+
+Compile instructions
+$ bin/hadoop com.sun.tools.javac.Main WordCount.java
+$ jar cf wc.jar WordCount*.class
+
+Usage
+# assumes input has already been loaded to hdfs
+$ bin/hadoop jar wc.jar WordCount <input> <output>
