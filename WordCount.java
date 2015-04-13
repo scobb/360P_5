@@ -23,11 +23,14 @@ public class WordCount {
       StringTokenizer itr = new StringTokenizer(value.toString());
       Text filename = new Text(((FileSplit)context.getInputSplit()).getPath().getName());
       while (itr.hasMoreTokens()) {
-        String val = itr.nextToken().replaceAll("[^A-Za-z]", "").toLowerCase(); 
-        if (!val.equals("")){
-          word.set(val);
-          context.write(word, filename);
-        }
+        String val = itr.nextToken().replaceAll("[^A-Za-z]", " ").toLowerCase();
+	String[] vals = val.split(" "); 
+        for (String v: vals) {
+          if (!v.equals("")){
+            word.set(v);
+            context.write(word, filename);
+          }
+	}
       }
     }
   }
