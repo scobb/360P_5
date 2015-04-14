@@ -64,7 +64,7 @@ public class WordCount {
         @Override
         public int compare(final OutputRecord lhs, OutputRecord rhs) {
           if (lhs.num == rhs.num) {
-            return Integer.parseInt(lhs.chapter.substring(4)) - Integer.parseInt(rhs.chapter.substring(4));
+            return Integer.parseInt(lhs.chapter.replaceAll("[^0-9]", "")) - Integer.parseInt(rhs.chapter.replaceAll("[^0-9]", ""));
           }
           return rhs.num - lhs.num;
         }
